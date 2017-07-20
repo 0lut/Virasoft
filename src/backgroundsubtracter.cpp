@@ -13,9 +13,6 @@ colourDeconvolution::colourDeconvolution()
 
 }
 
-
-
-
 cv::Mat colourDeconvolution::process(cv::Mat I,string stainingType)
 {
     //=======STEP 1=======
@@ -54,11 +51,7 @@ cv::Mat colourDeconvolution::process(cv::Mat I,string stainingType)
 
         //normalise vector length
 
-        Mat M = (Mat_<float>(3, 3) <<
-            0.6500286018877385, 0.7040309780445659, 0.28601258483060493,
-            0.2681475217165787, 0.5703137588748127, 0.7764271524330785,
-            0.711027231071447, 0.42318151943544724, 0.5615671627536436);
-
+        Mat M = normalizeStaining("H DAB");
         // D <-- M^-1
         Mat D = M.inv();
         //======STEP 4=======
@@ -95,6 +88,7 @@ cv::Mat colourDeconvolution::normalizeStaining(std::string stainingType)
     _vd cosy(3,0.0);
     _vd cosz(3,0.0);
     _vd len(3,0.0);
+    double leng;
 
     if (stainingType == "H&E")
     {
@@ -294,16 +288,73 @@ cv::Mat colourDeconvolution::normalizeStaining(std::string stainingType)
         }
     }
 
+    if (cosx[1]==0.0)
+    {
+        //2nd colour is unspecified
+        if (cosy[1]==0.0)
+        {
+            if (cosz[1]==0.0)
+            {
+                cosx[1]=cosz[0];
+                cosy[1]=cosx[0];
+                cosz[1]=cosy[0];
+            }
+        }
+    }
 
 
 
+    if (cosx[2]==0.0){ // 3rd colour is unspecified
+        if (cosy[2]==0.0)
+        {
+            if (cosz[2]==0.0)
+            {
+                if ((cosx[0]*cosx[0] + cosx[1]*cosx[1])> 1){
+
+                    cosx[2]=0.0;
+                }
+                else {
+                    cosx[2]=std::sqrt(1.0-(cosx[0]*cosx[0])-(cosx[1]*cosx[1]));
+                }
+
+                if ((cosy[0]*cosy[0] + cosy[1]*cosy[1])> 1){
+
+                    cosy[2]=0.0;
+                }
+                else {
+                    cosy[2]=std::sqrt(1.0-(cosy[0]*cosy[0])-(cosy[1]*cosy[1]));
+                }
+
+                if ((cosz[0]*cosz[0] + cosz[1]*cosz[1])> 1){
+
+                    cosz[2]=0.0;
+                }
+                else {
+                    cosz[2]=std::sqrt(1.0-(cosz[0]*cosz[0])-(cosz[1]*cosz[1]));
+                }
+            }
+        }
+    }
+
+    leng=std::sqrt(cosx[2]*cosx[2] + cosy[2]*cosy[2] + cosz[2]*cosz[2]);
+
+    cosx[2]= cosx[2]/leng;
+    cosy[2]= cosy[2]/leng;
+    cosz[2]= cosz[2]/leng;
 
 
 
+    for (int i=0; i<3; i++)
+    {
+        if (cosx[i] == 0.0)
+            cosx[i] = 0.001;
+        if (cosy[i] == 0.0)
+            cosy[i] = 0.001;
+        if (cosz[i] == 0.0)
+            cosz[i] = 0.001;
 
 
-
-
+    }
 
 
 

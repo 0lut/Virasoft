@@ -1,6 +1,7 @@
 #ifndef FILTERS_H
 #define FILTERS_H
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 
 
 class Filters
@@ -13,6 +14,7 @@ public:
     static const int MEAN=0,MEDIAN=1;
     Filters(int,double);
     cv::Mat dilate(cv::Mat &);
+    cv::Mat dilate(cv::Mat &, int kernelSize);
     cv::Mat meanFilter(cv::Mat &);
     Filters();
     ~Filters();

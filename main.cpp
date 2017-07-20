@@ -22,7 +22,7 @@ int main(int argc, char** argv )
     cv::Mat img=cv::imread(argv[1],1);
     Filters filter(3,4);
     colourDeconvolution CD;
-    img=CD.process(img,"H DAB");
+    img = filter.dilate(img);
     std::vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
     compression_params.push_back(9);

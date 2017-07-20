@@ -37,27 +37,32 @@ cv::Mat Filters::ApplyFilter(cv::Mat &inImage)
    return outputImage;
 
 }
-/*
- * IJ is using 4x4 circular kernel
- * Results are same with IJ (almost)
- * Dilate and erode are inverse operations, in inverted images, erode should be used instead
+/**
+ @param input image
+ * ImageJ is using 3x3 box filter in default.
+ * In inverted images, dilate() should be used instead erode. It will be implemented.
  */
 cv::Mat Filters::dilate(cv::Mat & inImage)
 {
-    //return inImage;
     cv::Mat outImage(inImage);
-    unsigned char kernelD [] = {0, 1, 1, 0,
-                                1, 1, 1, 1,
-                                1, 1, 1, 1,
-                                0, 1, 1, 0};
-
-    /*uchar kernelD [] = {0, 1, 0,
-                        1, 0, 1,
-                        0, 1, 0};*/
-    cv::Mat kernel(4,4,CV_8U,kernelD);
+    cv::Mat kernel = cv::Mat::ones(3,3,CV_8U);
     cv::erode(inImage,outImage,kernel);
     return outImage;
 }
+/**
+ * @param Input Image
+ * @param Size of kernel
+ */
+cv::Mat dilate(cv::Mat & inImage, int kernelSize)
+{
+
+    cv::Mat outImage(inImage);
+    cv::Mat kernel = cv::Mat::ones(kernelSize,kernelSize,CV_8U);
+    cv::erode(inImage,outImage,kernel);
+    return outImage;
+
+}
+
 
 /*
  *
