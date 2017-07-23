@@ -1,11 +1,16 @@
 #ifndef SKELETONIZE_H
 #define SKELETONIZE_H
+#include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 
-
-class skeletonize
+class Skeletonize
 {
+
+
 public:
-    skeletonize();
+    Skeletonize();
+    int thin(int,int [],cv::Mat &);
+    void process(cv::Mat &);
 };
 
 #endif // SKELETONIZE_H

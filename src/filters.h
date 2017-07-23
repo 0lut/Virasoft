@@ -6,7 +6,6 @@
 
 class Filters
 {
-
     cv::Mat filterToBeApplied;
     int filterType;
     double filterRadius;

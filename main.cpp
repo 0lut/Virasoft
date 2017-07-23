@@ -6,7 +6,8 @@
 #include "src/loselesssaver.cpp"
 #include "src/backgroundsubtracter.cpp"
 #include "src/rollingball.cpp"
-
+#include "src/generalpurposefunctions.cpp"
+#include "src/skeletonize.cpp"
 //using namespace  cv;
 int main(int argc, char** argv )
 {
@@ -19,10 +20,13 @@ int main(int argc, char** argv )
 
     //Row Column
 
-    cv::Mat img=cv::imread(argv[1],1);
+    cv::Mat img=cv::imread(argv[1],0);
     Filters filter(3,4);
     colourDeconvolution CD;
-    img = filter.dilate(img);
+    Skeletonize SK;
+    //img=binarize(img);
+    SK.process(img);
+    cout <<img.type();
     std::vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
     compression_params.push_back(9);

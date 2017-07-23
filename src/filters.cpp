@@ -1,6 +1,8 @@
 #include "filters.h"
 #include <iostream>
-#define MAX_KERNEL_LENGTH 31 // Why? What is kernel size in ImageJ as default?
+#include <stdexcept>
+#include <algorithm>
+#define MAX_KERNEL_LENGTH 20
 Filters::Filters(int inFilterType,double coef){
 
     filterType=inFilterType;
@@ -47,7 +49,9 @@ cv::Mat Filters::dilate(cv::Mat & inImage)
     cv::Mat outImage(inImage);
     cv::Mat kernel = cv::Mat::ones(3,3,CV_8U);
     cv::erode(inImage,outImage,kernel);
-    return outImage;
+    inImage=outImage;
+    outImage.release();
+    return inImage;
 }
 /**
  * @param Input Image
@@ -59,7 +63,9 @@ cv::Mat dilate(cv::Mat & inImage, int kernelSize)
     cv::Mat outImage(inImage);
     cv::Mat kernel = cv::Mat::ones(kernelSize,kernelSize,CV_8U);
     cv::erode(inImage,outImage,kernel);
-    return outImage;
+    inImage=outImage;
+    outImage.release();
+    return inImage;
 
 }
 
@@ -77,6 +83,10 @@ cv::Mat Filters::meanFilter(cv::Mat & inImage)
     cv::Mat kernel(3,3,CV_32F,kernelD);
     kernel=kernel/2;
     cv::filter2D(inImage,outImage,inImage.depth(),kernel);
-
-    return outImage;
+    inImage=outImage;
+    outImage.release();
+    return inImage;
 }
+
+
+
